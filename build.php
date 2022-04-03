@@ -18,19 +18,19 @@ Building from <?php echo realpath("content/"); ?>.
 function getSubpages(string $path = "content", int $indent = 0) {
     $spaces = str_repeat(" ", $indent);
     $tabSize = 2;
-    echo $spaces . "Adding subpages from $path";
+    echo $spaces . "Adding subpages from $path\n";
     $object = new stdClass;
     $object->files = new stdClass;
     $object->folders = new stdClass;
-    $object->title = "Site Help";
+    $object->title = array_reverse(array_filter(explode("/", $path), function($v) { return $v !== ""; }))[0];
     $object->type = "folder";
     $files = array_diff(scandir($path, SCANDIR_SORT_NONE), array('.', '..'));
     foreach ($files as $file) {
         if (is_dir("$path/$file")) {
-            echo $spaces . "Adding folder $file";
+            echo $spaces . "Adding folder $file\n";
             $object->folders->$file = getSubpages("$path/$file", $indent + $tabSize);
         } else {
-            echo $spaces . "Adding page $file";
+            echo $spaces . "Adding page $file\n";
             $page = new stdClass;
             $ext = pathinfo("$path/$file", PATHINFO_EXTENSION);
             $page->contentType = $ext;
